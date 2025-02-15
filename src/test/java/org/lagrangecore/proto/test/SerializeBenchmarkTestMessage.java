@@ -30,13 +30,7 @@ public class SerializeBenchmarkTestMessage extends ProtoMessage {
     public BooleanList booleanListField = BooleanList.of(true, false, true, false, true);
 
     @ProtoField(6)
-    public List<NestedMessage> nestedMessageField = List.of(
-            new NestedMessage(),
-            new NestedMessage() {{
-                nestedIntField = 43;
-                nestedStringListField = List.of("Goodbye", "World");
-            }}
-    );
+    public List<NestedMessage> nestedMessageField = List.of(new NestedMessage());
 
     public static class NestedMessage extends ProtoMessage {
         @ProtoField(1)

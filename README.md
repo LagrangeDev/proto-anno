@@ -27,17 +27,13 @@ Note that all the annotated fields should be public because the library uses ref
 
 You can instantiate a `Person` object like this:
 ```java
-Person person = new Person() {{
-    name = "Alice";
-    id = 123;
-    email = "someone@example.com";
-}};
+void doSomething() {
+    Person person = new Person();
+    person.name = "Alice";
+    person.id = 123;
+    person.email = "someone@example.com";
+}
 ```
-<details>
-<summary>Why double curly brackets to instantiate an object here?</summary>
-
-The outer pair of curly brackets creates an anonymous subclass of `Person`. The inner pair of curly brackets is an instance initializer block that sets the fields of the subclass. This is an idiom in Java to create an object and set its fields in one go.
-</details>
 
 To serialize the object to a byte array:
 ```java

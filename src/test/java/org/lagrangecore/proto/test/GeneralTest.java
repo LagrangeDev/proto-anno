@@ -5,8 +5,6 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import org.lagrangecore.proto.ProtobufDeserializer;
 import org.lagrangecore.proto.ProtobufSerializer;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -15,22 +13,22 @@ import java.util.List;
  */
 public final class GeneralTest {
     public static void main(String[] args) {
-        var initialMessage = new GeneralTestMessage() {{
-            intField = 42;
-            doubleField = 0.5;
-            stringField = "Hello, World!";
-            booleanField = true;
-            intListField = IntList.of(1, 2, 3, 4, 5);
-            doubleListField = DoubleList.of(0.1, 0.2, 0.3, 0.4, 0.5);
-            nestedMessageField = List.of(
-                    new GeneralTestMessage.NestedMessage() {{
-                        nestedStringListField = List.of("Hello", "World");
-                    }},
-                    new GeneralTestMessage.NestedMessage() {{
-                        nestedStringListField = List.of("Goodbye", "World");
-                    }}
-            );
-        }};
+        var initialMessage = new GeneralTestMessage();
+
+        initialMessage.intField = 42;
+        initialMessage.doubleField = 0.5;
+        initialMessage.stringField = "Hello, World!";
+        initialMessage.booleanField = true;
+        initialMessage.intListField = IntList.of(1, 2, 3, 4, 5);
+        initialMessage.doubleListField = DoubleList.of(0.1, 0.2, 0.3, 0.4, 0.5);
+
+        var nestedMessage1 = new GeneralTestMessage.NestedMessage();
+        nestedMessage1.nestedStringListField = List.of("Hello", "World");
+
+        var nestedMessage2 = new GeneralTestMessage.NestedMessage();
+        nestedMessage2.nestedStringListField = List.of("Goodbye", "World");
+
+        initialMessage.nestedMessageField = List.of(nestedMessage1, nestedMessage2);
 
         var serialized = ProtobufSerializer.of(GeneralTestMessage.class).serialize(initialMessage);
         var deserialized = ProtobufDeserializer.of(GeneralTestMessage.class).deserialize(serialized);
