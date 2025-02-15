@@ -70,39 +70,29 @@ public final class ProtobufDeserializer<T extends ProtoMessage> {
             InvocationTargetException, InstantiationException {
         var declaredField = desc.declaredField();
         var clazz = declaredField.getType();
-        if (clazz == int.class) {
-            declaredField.setInt(message, 0);
-        } else if (clazz == long.class) {
-            declaredField.setLong(message, 0L);
-        } else if (clazz == float.class) {
-            declaredField.setFloat(message, 0.0f);
-        } else if (clazz == double.class) {
-            declaredField.setDouble(message, 0.0);
-        } else if (clazz == boolean.class) {
-            declaredField.setBoolean(message, false);
-        } else if (clazz == String.class) {
-            declaredField.set(message, "");
-        } else if (clazz == byte[].class) {
-            declaredField.set(message, new byte[0]);
-        } else if (clazz == IntList.class) {
-            declaredField.set(message, new IntArrayList());
-        } else if (clazz == LongList.class) {
-            declaredField.set(message, new LongArrayList());
-        } else if (clazz == FloatList.class) {
-            declaredField.set(message, new FloatArrayList());
-        } else if (clazz == DoubleList.class) {
-            declaredField.set(message, new DoubleArrayList());
-        } else if (clazz == BooleanList.class) {
-            declaredField.set(message, new BooleanArrayList());
-        } else if (clazz == List.class) {
-            declaredField.set(message, new ArrayList<>());
-        } else {
-            if (desc.isOptional()) {
-                declaredField.set(message, null);
+        if (declaredField.get(message) == null) {
+            if (clazz == String.class && !desc.isOptional()) {
+                declaredField.set(message, "");
+            } else if (clazz == byte[].class && !desc.isOptional()) {
+                declaredField.set(message, new byte[0]);
+            } else if (clazz == IntList.class) {
+                declaredField.set(message, new IntArrayList());
+            } else if (clazz == LongList.class) {
+                declaredField.set(message, new LongArrayList());
+            } else if (clazz == FloatList.class) {
+                declaredField.set(message, new FloatArrayList());
+            } else if (clazz == DoubleList.class) {
+                declaredField.set(message, new DoubleArrayList());
+            } else if (clazz == BooleanList.class) {
+                declaredField.set(message, new BooleanArrayList());
+            } else if (clazz == List.class) {
+                declaredField.set(message, new ArrayList<>());
             } else {
-                var emptyDraft = clazz.getDeclaredConstructor().newInstance();
-                setDefaultValueFor((ProtoMessage) emptyDraft, desc);
-                declaredField.set(message, emptyDraft);
+                if (!desc.isOptional()) {
+                    var emptyDraft = clazz.getDeclaredConstructor().newInstance();
+                    setDefaultValueFor((ProtoMessage) emptyDraft, desc);
+                    declaredField.set(message, emptyDraft);
+                }
             }
         }
     }
