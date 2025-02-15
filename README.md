@@ -51,15 +51,15 @@ Person deserializedPerson = deserializer.deserialize(bytes);
 
 All the [scalar value types](https://protobuf.dev/programming-guides/proto3/#scalar) mentioned in the official protobuf documentation are supported. The types can be either inferred from the field type or explicitly specified by annotating the field with `@TypeMappedTo`. `int` and `long` can be mapped to multiple protobuf types.
 
-| Java      | Inferred Type | Supported                                          |
-|-----------|---------------|----------------------------------------------------|
-| `boolean` | `bool`        | `bool`                                             |
-| `int`     | `int32`       | `int32`, `uint32`, `sint32`, `fixed32`, `sfixed32` |
-| `long`    | `int64`       | `int64`, `uint64`, `sint64`, `fixed64`, `sfixed64` |
-| `float`   | `float`       | `float`                                            |
-| `double`  | `double`      | `double`                                           |
-| `String`  | `string`      | `string`                                           |
-| `byte[]`  | `bytes`       | `bytes`                                            |
+| Java      | Inferred  | Supported                                          |
+|-----------|-----------|----------------------------------------------------|
+| `boolean` | `bool`    | `bool`                                             |
+| `int`     | `int32`   | `int32`, `uint32`, `sint32`, `fixed32`, `sfixed32` |
+| `long`    | `int64`   | `int64`, `uint64`, `sint64`, `fixed64`, `sfixed64` |
+| `float`   | `float`   | `float`                                            |
+| `double`  | `double`  | `double`                                           |
+| `String`  | `string`  | `string`                                           |
+| `byte[]`  | `bytes`   | `bytes`                                            |
 
 ### Explicitly & Implicitly Optional Fields
 
