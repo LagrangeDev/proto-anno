@@ -114,7 +114,6 @@ The following features are not supported:
 - `GROUP` wire type (deprecated)
 - Required fields (deprecated in proto3)
 - Optional fields for primitive types
-- Custom default values (deprecated in proto3)
 - [Enumerations](https://protobuf.dev/programming-guides/proto3/#enum)
 - [Extensions](https://protobuf.dev/programming-guides/proto2/#extensions)
 - [Any](https://protobuf.dev/programming-guides/proto3/#any)
