@@ -177,7 +177,7 @@ public record ProtoFieldDescriptor(
     }
 
     @SuppressWarnings("unchecked")
-    private int calculateRepeatedSerializedSize(List<?> list) throws IllegalAccessException {
+    private int calculateRepeatedSerializedSize(List<?> list) {
         return switch (fieldType) {
             case INT32 -> ((IntList) list).intStream().map(CodedOutputStream::computeInt32SizeNoTag).sum();
             case INT64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeInt64SizeNoTag).sum();
