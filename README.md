@@ -63,7 +63,7 @@ All the [scalar value types](https://protobuf.dev/programming-guides/proto3/#sca
 
 ### Repeated Fields
 
-[fastutil](https://fastutil.di.unimi.it/) provides a set of fast and compact implementations of type-specific maps and sets. proto-anno uses `IntList`, `LongList`, `FloatList`, `DoubleList` and `BooleanList` in fastutil to store repeated `int`, `long`, `float`, `double` and `boolean` values, and `java.util.List` to store repeated string, byte array and message values. You cannot use `List` to store repeated scalar values, vice versa. 
+[fastutil](https://fastutil.di.unimi.it/) provides a set of fast and compact implementations of type-specific maps and sets. proto-anno uses `IntList`, `LongList`, `FloatList`, `DoubleList` and `BooleanList` in fastutil to store repeated primitive values, and `java.util.List` to store repeated string, byte array and message values. You cannot use `List` to store repeated primitive values, vice versa. 
 
 The annotation `@TypeMappedTo` also applies to repeated fields. For example:
 ```java
@@ -85,9 +85,9 @@ public class Person extends ProtoMessage {
 
 ### Packed Encoding
 
-As is mentioned in the [official documentation](https://protobuf.dev/programming-guides/encoding/#packed), it is recommended to use packed encoding for repeated scalar fields, and proto3 uses packed encoding by default. proto-anno also uses packed encoding by default. You can disable packed encoding by annotating the field with `@DisablePacking`.
+As is mentioned in the [official documentation](https://protobuf.dev/programming-guides/encoding/#packed), it is recommended to use packed encoding for repeated primitive fields, and proto3 uses packed encoding by default. proto-anno also uses packed encoding by default. You can disable packed encoding by annotating the field with `@DisablePacking`.
 
-This annotation only applies to the **encoding** process of **repeated scalar fields**. When deserializing, proto-anno will automatically detect whether the field is packed or not. Also, when it is used on repeated string, byte array or message fields, it will be ignored.
+This annotation only applies to the **encoding** process of **repeated primitive fields**. When deserializing, proto-anno will automatically detect whether the field is packed or not. Also, when it is used on repeated non-primitive fields, it will be ignored.
 
 ### Unsigned Integers
 
