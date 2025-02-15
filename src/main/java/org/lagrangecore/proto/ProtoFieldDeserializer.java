@@ -46,20 +46,18 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forInt32(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (IntList) desc.declaredField().get(draft);
+                if (list == null) {
+                    list = new IntArrayList();
+                    desc.declaredField().set(draft, list);
+                }
                 if (wireType == WireFormat.WIRETYPE_VARINT) {
-                    var list = (IntList) desc.declaredField().get(draft);
-                    if (list == null) {
-                        list = new IntArrayList();
-                        desc.declaredField().set(draft, list);
-                    }
                     list.add(in.readInt32());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
-                    var list = new IntArrayList();
                     var input = CodedInputStream.newInstance(in.readByteBuffer());
                     while (!input.isAtEnd()) {
                         list.add(input.readInt32());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -74,20 +72,18 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forInt64(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (LongList) desc.declaredField().get(draft);
+                if (list == null) {
+                    list = new LongArrayList();
+                    desc.declaredField().set(draft, list);
+                }
                 if (wireType == WireFormat.WIRETYPE_VARINT) {
-                    var list = (LongList) desc.declaredField().get(draft);
-                    if (list == null) {
-                        list = new LongArrayList();
-                        desc.declaredField().set(draft, list);
-                    }
                     list.add(in.readInt64());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
-                    var list = new LongArrayList();
                     var input = CodedInputStream.newInstance(in.readByteBuffer());
                     while (!input.isAtEnd()) {
                         list.add(input.readInt64());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -102,20 +98,18 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forUInt32(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (IntList) desc.declaredField().get(draft);
+                if (list == null) {
+                    list = new IntArrayList();
+                    desc.declaredField().set(draft, list);
+                }
                 if (wireType == WireFormat.WIRETYPE_VARINT) {
-                    var list = (IntList) desc.declaredField().get(draft);
-                    if (list == null) {
-                        list = new IntArrayList();
-                        desc.declaredField().set(draft, list);
-                    }
                     list.add(in.readUInt32());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
-                    var list = new IntArrayList();
                     var input = CodedInputStream.newInstance(in.readByteBuffer());
                     while (!input.isAtEnd()) {
                         list.add(input.readUInt32());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -130,20 +124,18 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forUInt64(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (LongList) desc.declaredField().get(draft);
+                if (list == null) {
+                    list = new LongArrayList();
+                    desc.declaredField().set(draft, list);
+                }
                 if (wireType == WireFormat.WIRETYPE_VARINT) {
-                    var list = (LongList) desc.declaredField().get(draft);
-                    if (list == null) {
-                        list = new LongArrayList();
-                        desc.declaredField().set(draft, list);
-                    }
                     list.add(in.readUInt64());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
-                    var list = new LongArrayList();
                     var input = CodedInputStream.newInstance(in.readByteBuffer());
                     while (!input.isAtEnd()) {
                         list.add(input.readUInt64());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -158,20 +150,18 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forSInt32(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (IntList) desc.declaredField().get(draft);
+                if (list == null) {
+                    list = new IntArrayList();
+                    desc.declaredField().set(draft, list);
+                }
                 if (wireType == WireFormat.WIRETYPE_VARINT) {
-                    var list = (IntList) desc.declaredField().get(draft);
-                    if (list == null) {
-                        list = new IntArrayList();
-                        desc.declaredField().set(draft, list);
-                    }
                     list.add(in.readSInt32());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
-                    var list = new IntArrayList();
                     var input = CodedInputStream.newInstance(in.readByteBuffer());
                     while (!input.isAtEnd()) {
                         list.add(input.readSInt32());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -186,20 +176,18 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forSInt64(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (LongList) desc.declaredField().get(draft);
+                if (list == null) {
+                    list = new LongArrayList();
+                    desc.declaredField().set(draft, list);
+                }
                 if (wireType == WireFormat.WIRETYPE_VARINT) {
-                    var list = (LongList) desc.declaredField().get(draft);
-                    if (list == null) {
-                        list = new LongArrayList();
-                        desc.declaredField().set(draft, list);
-                    }
                     list.add(in.readSInt64());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
-                    var list = new LongArrayList();
                     var input = CodedInputStream.newInstance(in.readByteBuffer());
                     while (!input.isAtEnd()) {
                         list.add(input.readSInt64());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -214,8 +202,8 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forFixed32(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (IntList) desc.declaredField().get(draft);
                 if (wireType == WireFormat.WIRETYPE_FIXED32) {
-                    var list = (IntList) desc.declaredField().get(draft);
                     if (list == null) {
                         list = new IntArrayList();
                         desc.declaredField().set(draft, list);
@@ -223,11 +211,13 @@ public interface ProtoFieldDeserializer {
                     list.add(in.readFixed32());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
                     int size = in.readUInt32() / 4;
-                    var list = new IntArrayList(size);
+                    if (list == null) {
+                        list = new IntArrayList(size);
+                        desc.declaredField().set(draft, list);
+                    }
                     for (int i = 0; i < size; i++) {
                         list.add(in.readFixed32());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -242,8 +232,8 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forFixed64(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (LongList) desc.declaredField().get(draft);
                 if (wireType == WireFormat.WIRETYPE_FIXED64) {
-                    var list = (LongList) desc.declaredField().get(draft);
                     if (list == null) {
                         list = new LongArrayList();
                         desc.declaredField().set(draft, list);
@@ -251,11 +241,13 @@ public interface ProtoFieldDeserializer {
                     list.add(in.readFixed64());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
                     int size = in.readUInt32() / 8;
-                    var list = new LongArrayList(size);
+                    if (list == null) {
+                        list = new LongArrayList(size);
+                        desc.declaredField().set(draft, list);
+                    }
                     for (int i = 0; i < size; i++) {
                         list.add(in.readFixed64());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -270,8 +262,8 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forSFixed32(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (IntList) desc.declaredField().get(draft);
                 if (wireType == WireFormat.WIRETYPE_FIXED32) {
-                    var list = (IntList) desc.declaredField().get(draft);
                     if (list == null) {
                         list = new IntArrayList();
                         desc.declaredField().set(draft, list);
@@ -279,11 +271,13 @@ public interface ProtoFieldDeserializer {
                     list.add(in.readSFixed32());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
                     int size = in.readUInt32() / 4;
-                    var list = new IntArrayList(size);
+                    if (list == null) {
+                        list = new IntArrayList(size);
+                        desc.declaredField().set(draft, list);
+                    }
                     for (int i = 0; i < size; i++) {
                         list.add(in.readSFixed32());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -298,8 +292,8 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forSFixed64(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (LongList) desc.declaredField().get(draft);
                 if (wireType == WireFormat.WIRETYPE_FIXED64) {
-                    var list = (LongList) desc.declaredField().get(draft);
                     if (list == null) {
                         list = new LongArrayList();
                         desc.declaredField().set(draft, list);
@@ -307,11 +301,13 @@ public interface ProtoFieldDeserializer {
                     list.add(in.readSFixed64());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
                     int size = in.readUInt32() / 8;
-                    var list = new LongArrayList(size);
+                    if (list == null) {
+                        list = new LongArrayList(size);
+                        desc.declaredField().set(draft, list);
+                    }
                     for (int i = 0; i < size; i++) {
                         list.add(in.readSFixed64());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -326,8 +322,8 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forFloat(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (FloatList) desc.declaredField().get(draft);
                 if (wireType == WireFormat.WIRETYPE_FIXED32) {
-                    var list = (FloatList) desc.declaredField().get(draft);
                     if (list == null) {
                         list = new FloatArrayList();
                         desc.declaredField().set(draft, list);
@@ -335,11 +331,13 @@ public interface ProtoFieldDeserializer {
                     list.add(in.readFloat());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
                     int size = in.readUInt32() / 4;
-                    var list = new FloatArrayList(size);
+                    if (list == null) {
+                        list = new FloatArrayList(size);
+                        desc.declaredField().set(draft, list);
+                    }
                     for (int i = 0; i < size; i++) {
                         list.add(in.readFloat());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -354,8 +352,8 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forDouble(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (DoubleList) desc.declaredField().get(draft);
                 if (wireType == WireFormat.WIRETYPE_FIXED64) {
-                    var list = (DoubleList) desc.declaredField().get(draft);
                     if (list == null) {
                         list = new DoubleArrayList();
                         desc.declaredField().set(draft, list);
@@ -363,11 +361,13 @@ public interface ProtoFieldDeserializer {
                     list.add(in.readDouble());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
                     int size = in.readUInt32() / 8;
-                    var list = new DoubleArrayList(size);
+                    if (list == null) {
+                        list = new DoubleArrayList(size);
+                        desc.declaredField().set(draft, list);
+                    }
                     for (int i = 0; i < size; i++) {
                         list.add(in.readDouble());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
@@ -382,8 +382,8 @@ public interface ProtoFieldDeserializer {
     static ProtoFieldDeserializer forBool(ProtoFieldDescriptor desc) {
         if (desc.isRepeated()) {
             return (draft, in, wireType) -> {
+                var list = (BooleanList) desc.declaredField().get(draft);
                 if (wireType == WireFormat.WIRETYPE_VARINT) {
-                    var list = (BooleanList) desc.declaredField().get(draft);
                     if (list == null) {
                         list = new BooleanArrayList();
                         desc.declaredField().set(draft, list);
@@ -391,11 +391,13 @@ public interface ProtoFieldDeserializer {
                     list.add(in.readBool());
                 } else if (wireType == WireFormat.WIRETYPE_LENGTH_DELIMITED) {
                     int size = in.readUInt32();
-                    var list = new BooleanArrayList(size);
+                    if (list == null) {
+                        list = new BooleanArrayList(size);
+                        desc.declaredField().set(draft, list);
+                    }
                     for (int i = 0; i < size; i++) {
                         list.add(in.readBool());
                     }
-                    desc.declaredField().set(draft, list);
                 }
             };
         } else {
