@@ -12,6 +12,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import org.lagrangecore.proto.annotations.ProtoField;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,9 +64,10 @@ public final class ProtobufDeserializer<T extends ProtoMessage> {
         return (ProtobufDeserializer<T>) deserializers.get(clazz);
     }
 
-    private static void setDefaultValueFor(ProtoMessage message, ProtoFieldDescriptor fieldDescriptor)
-            throws IllegalAccessException {
-        var declaredField = fieldDescriptor.declaredField();
+    private static void setDefaultValueFor(ProtoMessage message, ProtoFieldDescriptor desc)
+            throws IllegalAccessException, NoSuchMethodException,
+            InvocationTargetException, InstantiationException {
+        var declaredField = desc.declaredField();
         var clazz = declaredField.getType();
         if (clazz == int.class) {
             declaredField.setInt(message, 0);
@@ -94,7 +96,13 @@ public final class ProtobufDeserializer<T extends ProtoMessage> {
         } else if (clazz == List.class) {
             declaredField.set(message, List.of());
         } else {
-            throw new IllegalArgumentException("Unsupported field type: " + clazz.getName());
+            if (desc.isOptional()) {
+                declaredField.set(message, null);
+            } else {
+                var emptyDraft = clazz.getDeclaredConstructor().newInstance();
+                setDefaultValueFor((ProtoMessage) emptyDraft, desc);
+                declaredField.set(message, emptyDraft);
+            }
         }
     }
 
