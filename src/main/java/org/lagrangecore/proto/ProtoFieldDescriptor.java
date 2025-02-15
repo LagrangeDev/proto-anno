@@ -127,8 +127,6 @@ public record ProtoFieldDescriptor(
             return WireFormat.FieldType.STRING;
         } else if (type == ByteString.class) {
             return WireFormat.FieldType.BYTES;
-        } else if (type instanceof Class<?> clazz && clazz.isEnum()) {
-            return WireFormat.FieldType.ENUM;
         } else if (type instanceof Class<?> clazz
                 && ProtoMessage.class.isAssignableFrom(clazz)
         ) {
@@ -195,8 +193,6 @@ public record ProtoFieldDescriptor(
             case BOOL -> ((BooleanList) list).stream().mapToInt(CodedOutputStream::computeBoolSizeNoTag).sum();
             case STRING -> list.stream().mapToInt(o -> CodedOutputStream.computeStringSizeNoTag((String) o)).sum();
             case BYTES -> list.stream().mapToInt(o -> CodedOutputStream.computeBytesSizeNoTag((ByteString) o)).sum();
-            case ENUM ->
-                    list.stream().mapToInt(o -> CodedOutputStream.computeEnumSizeNoTag(((Enum<?>) o).ordinal())).sum();
             case MESSAGE -> {
                 var serializer = ProtobufSerializer.of((Class<ProtoMessage>) actualType);
                 yield list.stream().mapToInt(o -> {
@@ -209,7 +205,7 @@ public record ProtoFieldDescriptor(
                     }
                 }).sum();
             }
-            case GROUP -> throw new IllegalArgumentException("Unsupported field type: GROUP");
+            default -> throw new IllegalArgumentException("Unsupported field type");
         };
     }
 
@@ -231,14 +227,13 @@ public record ProtoFieldDescriptor(
             case BOOL -> CodedOutputStream.computeBoolSizeNoTag(declaredField.getBoolean(msg));
             case STRING -> CodedOutputStream.computeStringSizeNoTag((String) declaredField.get(msg));
             case BYTES -> CodedOutputStream.computeByteArraySizeNoTag((byte[]) declaredField.get(msg));
-            case ENUM -> CodedOutputStream.computeEnumSizeNoTag(((Enum<?>) declaredField.get(msg)).ordinal());
             case MESSAGE -> {
                 int bodySize = ProtobufSerializer.of((Class<ProtoMessage>) actualType)
                         .computeSize((ProtoMessage) declaredField.get(msg));
                 int lengthSize = CodedOutputStream.computeUInt32SizeNoTag(bodySize);
                 yield lengthSize + bodySize;
             }
-            case GROUP -> throw new IllegalArgumentException("Unsupported field type: GROUP");
+            default -> throw new IllegalArgumentException("Unsupported field type");
         };
     }
 

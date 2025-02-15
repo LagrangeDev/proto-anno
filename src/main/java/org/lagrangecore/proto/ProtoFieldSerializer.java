@@ -32,9 +32,8 @@ public interface ProtoFieldSerializer {
             case BOOL -> forBoolean(desc);
             case STRING -> forString(desc);
             case BYTES -> forBytes(desc);
-            case ENUM -> forEnum(desc);
             case MESSAGE -> forMessage(desc);
-            case GROUP -> throw new IllegalArgumentException("Unexpected input");
+            default -> throw new IllegalArgumentException("Unexpected input");
         };
     }
 
@@ -417,33 +416,6 @@ public interface ProtoFieldSerializer {
             return (msg, out) -> {
                 var value = (byte[]) desc.declaredField().get(msg);
                 out.writeBytes(desc.fieldNumber(), ByteString.copyFrom(value));
-            };
-        }
-    }
-
-    static ProtoFieldSerializer forEnum(ProtoFieldDescriptor desc) {
-        if (desc.isRepeated()) {
-            if (desc.isPacked()) {
-                return (msg, out) -> {
-                    var list = (List<Enum<?>>) desc.declaredField().get(msg);
-                    out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
-                    out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
-                    for (var value : list) {
-                        out.writeEnumNoTag(value.ordinal());
-                    }
-                };
-            } else {
-                return (msg, out) -> {
-                    var list = (List<Enum<?>>) desc.declaredField().get(msg);
-                    for (var value : list) {
-                        out.writeEnum(desc.fieldNumber(), value.ordinal());
-                    }
-                };
-            }
-        } else {
-            return (msg, out) -> {
-                var value = (Enum<?>) desc.declaredField().get(msg);
-                out.writeEnum(desc.fieldNumber(), value.ordinal());
             };
         }
     }
