@@ -100,16 +100,16 @@ public record ProtoFieldDescriptor(
             } else {
                 throw new IllegalArgumentException("Unsupported field type: " + genericType.getTypeName());
             }
-        } else {
-            return new ProtoFieldDescriptor(
-                    field.getAnnotation(ProtoField.class).value(),
-                    typeMappedTo == null
-                            ? inferFieldType(field.getType())
-                            : convertToWireFormat(typeMappedTo.value()),
-                    field.isAnnotationPresent(Nullable.class), false, false,
-                    field, field.getType()
-            );
         }
+
+        return new ProtoFieldDescriptor(
+                field.getAnnotation(ProtoField.class).value(),
+                typeMappedTo == null
+                        ? inferFieldType(field.getType())
+                        : convertToWireFormat(typeMappedTo.value()),
+                field.isAnnotationPresent(Nullable.class), false, false,
+                field, field.getType()
+        );
     }
 
     static WireFormat.FieldType inferFieldType(final Type type) {
