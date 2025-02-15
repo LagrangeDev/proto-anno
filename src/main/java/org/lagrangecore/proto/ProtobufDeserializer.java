@@ -2,13 +2,14 @@ package org.lagrangecore.proto;
 
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.WireFormat;
+import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
+import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.floats.FloatList;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntArraySet;
-import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.*;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import org.lagrangecore.proto.annotations.ProtoField;
 
@@ -84,17 +85,17 @@ public final class ProtobufDeserializer<T extends ProtoMessage> {
         } else if (clazz == byte[].class) {
             declaredField.set(message, new byte[0]);
         } else if (clazz == IntList.class) {
-            declaredField.set(message, IntList.of());
+            declaredField.set(message, new IntArrayList());
         } else if (clazz == LongList.class) {
-            declaredField.set(message, LongList.of());
+            declaredField.set(message, new LongArrayList());
         } else if (clazz == FloatList.class) {
-            declaredField.set(message, FloatList.of());
+            declaredField.set(message, new FloatArrayList());
         } else if (clazz == DoubleList.class) {
-            declaredField.set(message, DoubleList.of());
+            declaredField.set(message, new DoubleArrayList());
         } else if (clazz == BooleanList.class) {
-            declaredField.set(message, BooleanList.of());
+            declaredField.set(message, new BooleanArrayList());
         } else if (clazz == List.class) {
-            declaredField.set(message, List.of());
+            declaredField.set(message, new ArrayList<>());
         } else {
             if (desc.isOptional()) {
                 declaredField.set(message, null);
