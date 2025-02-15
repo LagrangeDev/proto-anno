@@ -21,10 +21,6 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 @FunctionalInterface
 public interface ProtoFieldDeserializer {
-    void deserialize(ProtoMessage draft, CodedInputStream in, int wireType) throws
-            IOException, IllegalAccessException, InvocationTargetException,
-            NoSuchMethodException, InstantiationException;
-
     static ProtoFieldDeserializer create(ProtoFieldDescriptor desc) {
         return switch (desc.fieldType()) {
             case INT32 -> forInt32(desc);
@@ -474,4 +470,8 @@ public interface ProtoFieldDeserializer {
             };
         }
     }
+
+    void deserialize(ProtoMessage draft, CodedInputStream in, int wireType) throws
+            IOException, IllegalAccessException, InvocationTargetException,
+            NoSuchMethodException, InstantiationException;
 }

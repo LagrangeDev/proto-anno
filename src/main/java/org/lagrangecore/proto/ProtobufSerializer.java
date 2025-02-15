@@ -36,9 +36,10 @@ public final class ProtobufSerializer<T extends ProtoMessage> {
 
     /**
      * Get a serializer for the given class.
+     *
      * @param clazz the class of the protobuf message
+     * @param <T>   the type of the protobuf message
      * @return the serializer; if it does not exist, a new one is created
-     * @param <T> the type of the protobuf message
      */
     @SuppressWarnings("unchecked")
     public static <T extends ProtoMessage> ProtobufSerializer<T> of(Class<T> clazz) {
@@ -64,6 +65,7 @@ public final class ProtobufSerializer<T extends ProtoMessage> {
 
     /**
      * Serialize a protobuf message to a byte array.
+     *
      * @param message the message to serialize
      * @return the serialized message
      */

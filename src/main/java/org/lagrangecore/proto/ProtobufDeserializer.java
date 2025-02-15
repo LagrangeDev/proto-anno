@@ -5,12 +5,13 @@ import com.google.protobuf.WireFormat;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.floats.FloatList;
-import it.unimi.dsi.fastutil.ints.*;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
+import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import org.lagrangecore.proto.annotations.ProtoField;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +19,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * A deserializer for protobuf messages.
+ *
  * @param <T> the type of the protobuf message
  */
 public final class ProtobufDeserializer<T extends ProtoMessage> {
@@ -48,9 +50,10 @@ public final class ProtobufDeserializer<T extends ProtoMessage> {
 
     /**
      * Get a deserializer for the given class.
+     *
      * @param clazz the class of the protobuf message
+     * @param <T>   the type of the protobuf message
      * @return the deserializer; if it does not exist, a new one is created
-     * @param <T> the type of the protobuf message
      */
     @SuppressWarnings("unchecked")
     public static <T extends ProtoMessage> ProtobufDeserializer<T> of(Class<T> clazz) {
@@ -58,42 +61,6 @@ public final class ProtobufDeserializer<T extends ProtoMessage> {
             deserializers.putIfAbsent(clazz, new ProtobufDeserializer<>(clazz));
         }
         return (ProtobufDeserializer<T>) deserializers.get(clazz);
-    }
-
-    /**
-     * Deserialize a protobuf message from a byte array.
-     * @param data the data to deserialize
-     * @return the deserialized message
-     */
-    public T deserialize(byte[] data) {
-        try {
-            var message = clazz.getDeclaredConstructor().newInstance();
-            var stream = CodedInputStream.newInstance(data);
-            var visitedSet = new IntArraySet();
-
-            while (!stream.isAtEnd()) {
-                var tag = stream.readTag();
-                var fieldNumber = WireFormat.getTagFieldNumber(tag);
-                var wireType = WireFormat.getTagWireType(tag);
-                var fieldDescriptor = fieldDeserializers.get(fieldNumber);
-                if (fieldDescriptor == null) {
-                    stream.skipField(tag);
-                    continue;
-                }
-                visitedSet.add(fieldNumber);
-                fieldDescriptor.deserialize(message, stream, wireType);
-            }
-
-            for (var fieldDescriptor : fieldDescriptors) {
-                if (!visitedSet.contains(fieldDescriptor.fieldNumber())) {
-                    setDefaultValueFor(message, fieldDescriptor);
-                }
-            }
-
-            return message;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private static void setDefaultValueFor(ProtoMessage message, ProtoFieldDescriptor fieldDescriptor)
@@ -128,6 +95,43 @@ public final class ProtobufDeserializer<T extends ProtoMessage> {
             declaredField.set(message, List.of());
         } else {
             throw new IllegalArgumentException("Unsupported field type: " + clazz.getName());
+        }
+    }
+
+    /**
+     * Deserialize a protobuf message from a byte array.
+     *
+     * @param data the data to deserialize
+     * @return the deserialized message
+     */
+    public T deserialize(byte[] data) {
+        try {
+            var message = clazz.getDeclaredConstructor().newInstance();
+            var stream = CodedInputStream.newInstance(data);
+            var visitedSet = new IntArraySet();
+
+            while (!stream.isAtEnd()) {
+                var tag = stream.readTag();
+                var fieldNumber = WireFormat.getTagFieldNumber(tag);
+                var wireType = WireFormat.getTagWireType(tag);
+                var fieldDescriptor = fieldDeserializers.get(fieldNumber);
+                if (fieldDescriptor == null) {
+                    stream.skipField(tag);
+                    continue;
+                }
+                visitedSet.add(fieldNumber);
+                fieldDescriptor.deserialize(message, stream, wireType);
+            }
+
+            for (var fieldDescriptor : fieldDescriptors) {
+                if (!visitedSet.contains(fieldDescriptor.fieldNumber())) {
+                    setDefaultValueFor(message, fieldDescriptor);
+                }
+            }
+
+            return message;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -29,88 +29,6 @@ public record ProtoFieldDescriptor(
         Field declaredField,
         Type actualType
 ) implements Comparable<ProtoFieldDescriptor> {
-    void computeSerializedSize(ProtoMessage message) throws IllegalAccessException {
-        int tagSize = CodedOutputStream.computeTagSize(fieldNumber);
-        if (isRepeated) {
-            var list = (List<?>) declaredField.get(message);
-            if (isPacked) {
-                int repeatedSize = calculateRepeatedSerializedSize(list);
-                int packedLengthSize = CodedOutputStream.computeUInt32SizeNoTag(repeatedSize);
-                message.lengthDelimitedFieldSizes.put(fieldNumber, repeatedSize);
-                message.serializedSize += tagSize + packedLengthSize + repeatedSize;
-            } else {
-                message.serializedSize += tagSize * list.size() + calculateRepeatedSerializedSize(list);
-            }
-        } else {
-            message.serializedSize += calculateSingleSerializedSize(message) + tagSize;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private int calculateRepeatedSerializedSize(List<?> list) throws IllegalAccessException {
-        return switch (fieldType) {
-            case INT32 -> ((IntList) list).intStream().map(CodedOutputStream::computeInt32SizeNoTag).sum();
-            case INT64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeInt64SizeNoTag).sum();
-            case UINT32 -> ((IntList) list).intStream().map(CodedOutputStream::computeUInt32SizeNoTag).sum();
-            case UINT64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeUInt64SizeNoTag).sum();
-            case SINT32 -> ((IntList) list).intStream().map(CodedOutputStream::computeSInt32SizeNoTag).sum();
-            case SINT64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeSInt64SizeNoTag).sum();
-            case FIXED32 -> ((IntList) list).intStream().map(CodedOutputStream::computeFixed32SizeNoTag).sum();
-            case FIXED64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeFixed64SizeNoTag).sum();
-            case SFIXED32 -> ((IntList) list).intStream().map(CodedOutputStream::computeSFixed32SizeNoTag).sum();
-            case SFIXED64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeSFixed64SizeNoTag).sum();
-            case FLOAT -> ((FloatList) list).doubleStream().mapToInt(
-                    value -> CodedOutputStream.computeFloatSizeNoTag((float) value)).sum();
-            case DOUBLE -> ((DoubleList) list).doubleStream().mapToInt(CodedOutputStream::computeDoubleSizeNoTag).sum();
-            case BOOL -> ((BooleanList) list).stream().mapToInt(CodedOutputStream::computeBoolSizeNoTag).sum();
-            case STRING -> list.stream().mapToInt(o -> CodedOutputStream.computeStringSizeNoTag((String) o)).sum();
-            case BYTES -> list.stream().mapToInt(o -> CodedOutputStream.computeBytesSizeNoTag((ByteString) o)).sum();
-            case ENUM -> list.stream().mapToInt(o -> CodedOutputStream.computeEnumSizeNoTag(((Enum<?>) o).ordinal())).sum();
-            case MESSAGE -> {
-                var serializer = ProtobufSerializer.of((Class<ProtoMessage>) actualType);
-                yield list.stream().mapToInt(o -> {
-                    try {
-                        int bodySize = serializer.computeSize((ProtoMessage) o);
-                        int lengthSize = CodedOutputStream.computeUInt32SizeNoTag(bodySize);
-                        return lengthSize + bodySize;
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).sum();
-            }
-            case GROUP -> throw new IllegalArgumentException("Unsupported field type: GROUP");
-        };
-    }
-
-    @SuppressWarnings("unchecked")
-    private int calculateSingleSerializedSize(ProtoMessage msg) throws IllegalAccessException {
-        return switch (fieldType) {
-            case INT32 -> CodedOutputStream.computeInt32SizeNoTag(declaredField.getInt(msg));
-            case INT64 -> CodedOutputStream.computeInt64SizeNoTag(declaredField.getLong(msg));
-            case UINT32 -> CodedOutputStream.computeUInt32SizeNoTag(declaredField.getInt(msg));
-            case UINT64 -> CodedOutputStream.computeUInt64SizeNoTag(declaredField.getLong(msg));
-            case SINT32 -> CodedOutputStream.computeSInt32SizeNoTag(declaredField.getInt(msg));
-            case SINT64 -> CodedOutputStream.computeSInt64SizeNoTag(declaredField.getLong(msg));
-            case FIXED32 -> CodedOutputStream.computeFixed32SizeNoTag(declaredField.getInt(msg));
-            case FIXED64 -> CodedOutputStream.computeFixed64SizeNoTag(declaredField.getLong(msg));
-            case SFIXED32 -> CodedOutputStream.computeSFixed32SizeNoTag(declaredField.getInt(msg));
-            case SFIXED64 -> CodedOutputStream.computeSFixed64SizeNoTag(declaredField.getLong(msg));
-            case FLOAT -> CodedOutputStream.computeFloatSizeNoTag(declaredField.getFloat(msg));
-            case DOUBLE -> CodedOutputStream.computeDoubleSizeNoTag(declaredField.getDouble(msg));
-            case BOOL -> CodedOutputStream.computeBoolSizeNoTag(declaredField.getBoolean(msg));
-            case STRING -> CodedOutputStream.computeStringSizeNoTag((String) declaredField.get(msg));
-            case BYTES -> CodedOutputStream.computeByteArraySizeNoTag((byte[]) declaredField.get(msg));
-            case ENUM -> CodedOutputStream.computeEnumSizeNoTag(((Enum<?>) declaredField.get(msg)).ordinal());
-            case MESSAGE -> {
-                int bodySize = ProtobufSerializer.of((Class<ProtoMessage>) actualType)
-                        .computeSize((ProtoMessage) declaredField.get(msg));
-                int lengthSize = CodedOutputStream.computeUInt32SizeNoTag(bodySize);
-                yield lengthSize + bodySize;
-            }
-            case GROUP -> throw new IllegalArgumentException("Unsupported field type: GROUP");
-        };
-    }
-
     static ProtoFieldDescriptor fromField(Field field, ProtoField protoField) {
         var typeMappedTo = field.getAnnotation(TypeMappedTo.class);
 
@@ -165,7 +83,7 @@ public record ProtoFieldDescriptor(
         }
 
         if (field.getType() == List.class) {
-            var genericType = field.getGenericType();;
+            var genericType = field.getGenericType();
             if (genericType instanceof ParameterizedType parameterizedType
                     && parameterizedType.getActualTypeArguments().length > 0) {
                 var actualType = parameterizedType.getActualTypeArguments()[0];
@@ -238,6 +156,89 @@ public record ProtoFieldDescriptor(
             case STRING -> WireFormat.FieldType.STRING;
             case BYTES -> WireFormat.FieldType.BYTES;
             case MESSAGE -> WireFormat.FieldType.MESSAGE;
+        };
+    }
+
+    void computeSerializedSize(ProtoMessage message) throws IllegalAccessException {
+        int tagSize = CodedOutputStream.computeTagSize(fieldNumber);
+        if (isRepeated) {
+            var list = (List<?>) declaredField.get(message);
+            if (isPacked) {
+                int repeatedSize = calculateRepeatedSerializedSize(list);
+                int packedLengthSize = CodedOutputStream.computeUInt32SizeNoTag(repeatedSize);
+                message.lengthDelimitedFieldSizes.put(fieldNumber, repeatedSize);
+                message.serializedSize += tagSize + packedLengthSize + repeatedSize;
+            } else {
+                message.serializedSize += tagSize * list.size() + calculateRepeatedSerializedSize(list);
+            }
+        } else {
+            message.serializedSize += calculateSingleSerializedSize(message) + tagSize;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private int calculateRepeatedSerializedSize(List<?> list) throws IllegalAccessException {
+        return switch (fieldType) {
+            case INT32 -> ((IntList) list).intStream().map(CodedOutputStream::computeInt32SizeNoTag).sum();
+            case INT64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeInt64SizeNoTag).sum();
+            case UINT32 -> ((IntList) list).intStream().map(CodedOutputStream::computeUInt32SizeNoTag).sum();
+            case UINT64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeUInt64SizeNoTag).sum();
+            case SINT32 -> ((IntList) list).intStream().map(CodedOutputStream::computeSInt32SizeNoTag).sum();
+            case SINT64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeSInt64SizeNoTag).sum();
+            case FIXED32 -> ((IntList) list).intStream().map(CodedOutputStream::computeFixed32SizeNoTag).sum();
+            case FIXED64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeFixed64SizeNoTag).sum();
+            case SFIXED32 -> ((IntList) list).intStream().map(CodedOutputStream::computeSFixed32SizeNoTag).sum();
+            case SFIXED64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeSFixed64SizeNoTag).sum();
+            case FLOAT -> ((FloatList) list).doubleStream().mapToInt(
+                    value -> CodedOutputStream.computeFloatSizeNoTag((float) value)).sum();
+            case DOUBLE -> ((DoubleList) list).doubleStream().mapToInt(CodedOutputStream::computeDoubleSizeNoTag).sum();
+            case BOOL -> ((BooleanList) list).stream().mapToInt(CodedOutputStream::computeBoolSizeNoTag).sum();
+            case STRING -> list.stream().mapToInt(o -> CodedOutputStream.computeStringSizeNoTag((String) o)).sum();
+            case BYTES -> list.stream().mapToInt(o -> CodedOutputStream.computeBytesSizeNoTag((ByteString) o)).sum();
+            case ENUM ->
+                    list.stream().mapToInt(o -> CodedOutputStream.computeEnumSizeNoTag(((Enum<?>) o).ordinal())).sum();
+            case MESSAGE -> {
+                var serializer = ProtobufSerializer.of((Class<ProtoMessage>) actualType);
+                yield list.stream().mapToInt(o -> {
+                    try {
+                        int bodySize = serializer.computeSize((ProtoMessage) o);
+                        int lengthSize = CodedOutputStream.computeUInt32SizeNoTag(bodySize);
+                        return lengthSize + bodySize;
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).sum();
+            }
+            case GROUP -> throw new IllegalArgumentException("Unsupported field type: GROUP");
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    private int calculateSingleSerializedSize(ProtoMessage msg) throws IllegalAccessException {
+        return switch (fieldType) {
+            case INT32 -> CodedOutputStream.computeInt32SizeNoTag(declaredField.getInt(msg));
+            case INT64 -> CodedOutputStream.computeInt64SizeNoTag(declaredField.getLong(msg));
+            case UINT32 -> CodedOutputStream.computeUInt32SizeNoTag(declaredField.getInt(msg));
+            case UINT64 -> CodedOutputStream.computeUInt64SizeNoTag(declaredField.getLong(msg));
+            case SINT32 -> CodedOutputStream.computeSInt32SizeNoTag(declaredField.getInt(msg));
+            case SINT64 -> CodedOutputStream.computeSInt64SizeNoTag(declaredField.getLong(msg));
+            case FIXED32 -> CodedOutputStream.computeFixed32SizeNoTag(declaredField.getInt(msg));
+            case FIXED64 -> CodedOutputStream.computeFixed64SizeNoTag(declaredField.getLong(msg));
+            case SFIXED32 -> CodedOutputStream.computeSFixed32SizeNoTag(declaredField.getInt(msg));
+            case SFIXED64 -> CodedOutputStream.computeSFixed64SizeNoTag(declaredField.getLong(msg));
+            case FLOAT -> CodedOutputStream.computeFloatSizeNoTag(declaredField.getFloat(msg));
+            case DOUBLE -> CodedOutputStream.computeDoubleSizeNoTag(declaredField.getDouble(msg));
+            case BOOL -> CodedOutputStream.computeBoolSizeNoTag(declaredField.getBoolean(msg));
+            case STRING -> CodedOutputStream.computeStringSizeNoTag((String) declaredField.get(msg));
+            case BYTES -> CodedOutputStream.computeByteArraySizeNoTag((byte[]) declaredField.get(msg));
+            case ENUM -> CodedOutputStream.computeEnumSizeNoTag(((Enum<?>) declaredField.get(msg)).ordinal());
+            case MESSAGE -> {
+                int bodySize = ProtobufSerializer.of((Class<ProtoMessage>) actualType)
+                        .computeSize((ProtoMessage) declaredField.get(msg));
+                int lengthSize = CodedOutputStream.computeUInt32SizeNoTag(bodySize);
+                yield lengthSize + bodySize;
+            }
+            case GROUP -> throw new IllegalArgumentException("Unsupported field type: GROUP");
         };
     }
 

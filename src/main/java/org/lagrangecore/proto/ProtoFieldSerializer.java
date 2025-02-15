@@ -15,8 +15,6 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 @FunctionalInterface
 public interface ProtoFieldSerializer {
-    void serialize(ProtoMessage msg, CodedOutputStream out) throws IOException, IllegalAccessException;
-
     static ProtoFieldSerializer create(ProtoFieldDescriptor desc) {
         return switch (desc.fieldType()) {
             case INT32 -> forInt32(desc);
@@ -470,4 +468,6 @@ public interface ProtoFieldSerializer {
             };
         }
     }
+
+    void serialize(ProtoMessage msg, CodedOutputStream out) throws IOException, IllegalAccessException;
 }
