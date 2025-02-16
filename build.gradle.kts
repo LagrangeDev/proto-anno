@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("maven-publish")
 }
 
 group = "org.lagrangecore"
@@ -23,4 +24,16 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = project.group.toString()
+            version = project.version.toString()
+            artifactId = rootProject.name
+
+            from(components["java"])
+        }
+    }
 }
