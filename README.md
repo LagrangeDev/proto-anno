@@ -102,6 +102,29 @@ var deserializer = ProtobufDeserializer.of(Person.class);
 Person deserializedPerson = deserializer.deserialize(bytes);
 ```
 
+### Constructors
+
+If you want to add a constructor with arguments to the class, **you should also declare a no-argument constructor in the class**. The library will use this constructor to instantiate the object when deserializing. Otherwise, a `NoSuchMethodException` will be thrown. So you can declare the `Person` class like this:
+```java
+public class Person extends ProtoMessage {
+    public String name;
+    public int id;
+    public String email;
+    
+    // proto-anno needs this to deserialize
+    public Person() {
+    }
+    
+    public Person(String name, int id, String email) {
+        this.name = name;
+        this.id = id;
+        this.email = email;
+    }
+}
+```
+
+Only under one specific condition can you omit the no-argument constructor while preserving constructors with arguments. That is when you do not need to deserialize the object. For example, you only need to serialize the object and send it to another service.
+
 ### Type Mapping
 
 All the [scalar value types](https://protobuf.dev/programming-guides/proto3/#scalar) mentioned in the official protobuf documentation are supported. The types can be either inferred from the field type or explicitly specified by annotating the field with `@TypeMappedTo`. `int` and `long` can be mapped to multiple protobuf types.
