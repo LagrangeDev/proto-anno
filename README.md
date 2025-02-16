@@ -107,8 +107,13 @@ Person deserializedPerson = deserializer.deserialize(bytes);
 If you want to add a constructor with arguments to the class, **you should also declare a no-argument constructor in the class**. The library will use this constructor to instantiate the object when deserializing. Otherwise, a `NoSuchMethodException` will be thrown. So you can declare the `Person` class like this:
 ```java
 public class Person extends ProtoMessage {
+    @ProtoField(1)
     public String name;
+    
+    @ProtoField(2)
     public int id;
+    
+    @ProtoField(3)
     public String email;
     
     // proto-anno needs this to deserialize
