@@ -146,19 +146,7 @@ All the [scalar value types](https://protobuf.dev/programming-guides/proto3/#sca
 
 ### Explicitly & Implicitly Optional Fields
 
-"Explicitly optional" means that if not present in serialized data when deserializing, the field will be set to `null` in the output object. In contrast, "implicitly optional" means that the field must be non-nullish in the deserialized data. Chances are that the field is not present in the **serialized data**, and the field will be set to the default value of the field type.
-
-Here is a simple table that explains the behavior of fields with different types:
-
-| Field Type | Implicitly Optional | Explicitly Optional |
-|------------|---------------------|---------------------|
-| `boolean`  | `false`             | Not supported       |
-| `int`      | `0`                 | Not supported       |
-| `long`     | `0`                 | Not supported       |
-| `float`    | `0.0f`              | Not supported       |
-| `double`   | `0.0`               | Not supported       |
-| `String`   | `""`                | `null`              |
-| `byte[]`   | `new byte[0]`       | `null`              |
+"Explicitly optional" means that if not present in serialized data when deserializing, the field will be set to `null` in the output object. In contrast, "implicitly optional" means that the field must be non-nullish in the deserialized data. Chances are that the field is not present in the **serialized data**, and the field will be set to the [built-in default value](#default-values) of the field type.
 
 For a nested implicitly optional field, the default value of the field type will be used. For a nested explicitly optional field, the field will be set to `null`. 
 
@@ -171,6 +159,42 @@ For a nested implicitly optional field, the default value of the field type will
 `org.jetbrains:annotations` provides a set of annotations to indicate nullability. By default, all fields are implicitly optional. You can annotate a non-primitive field with `@Nullable` to make it explicitly optional, so that the field will be set to `null` instead of a non-nullish value if it is not present in the serialized data.
 
 `@NotNull`-annotated field will not be recognized as a required field. Still, you can use it to indicate that the field should not be `null` under any circumstances, and your IDE will give you a warning if you do not initialize a default value for the field, or if you try to assign `null` to the field.
+
+### Default Values
+
+Here is a simple table that explains the built-in default values of implicitly optional and explicitly optional fields:
+
+| Field Type | Implicitly Optional | Explicitly Optional |
+|------------|---------------------|---------------------|
+| `boolean`  | `false`             | Not supported       |
+| `int`      | `0`                 | Not supported       |
+| `long`     | `0`                 | Not supported       |
+| `float`    | `0.0f`              | Not supported       |
+| `double`   | `0.0`               | Not supported       |
+| `String`   | `""`                | `null`              |
+| `byte[]`   | `new byte[0]`       | `null`              |
+
+You can overwrite the built-in default values by setting the field value directly upon declaration or in the constructor. Here is an example struct with explicitly optional fields, and implicitly optional fields with or without custom default values:
+```java
+public class Person extends ProtoMessage {
+    @ProtoField(1)
+    public String name = "Alice";   // Default value set upon declaration
+    
+    @ProtoField(2)
+    public int id;                  // Default value set in the constructor
+    
+    @ProtoField(3)
+    @Nullable
+    public String email;            // Will be set to null if not present in the serialized data
+    
+    @ProtoField(4)
+    public List<String> phones;     // Will be assigned an empty list if not present in the serialized data
+    
+    public Person() {
+        id = 123;                   // Sets the default value of the field
+    }
+}
+```
 
 ### Repeated Fields
 
