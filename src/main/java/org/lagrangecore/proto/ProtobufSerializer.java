@@ -23,6 +23,12 @@ public final class ProtobufSerializer<T extends ProtoMessage> {
             throw new IllegalArgumentException("Class " + clazz.getName() + " is not a ProtoMessage");
         }
 
+        try {
+            clazz.getDeclaredConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException("Class " + clazz.getName() + " does not have a no-argument constructor", e);
+        }
+
         var fields = clazz.getDeclaredFields();
         for (var field : fields) {
             var protoField = field.getAnnotation(ProtoField.class);
