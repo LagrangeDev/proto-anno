@@ -1,10 +1,9 @@
 plugins {
     id("java")
-    id("maven-publish")
 }
 
 group = "org.lagrangecore"
-version = "0.1.0"
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -18,23 +17,4 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-        }
-    }
-
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/LagrangeDev/proto-anno")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
-            }
-        }
-    }
 }
