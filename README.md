@@ -8,6 +8,61 @@ In C#, the protobuf-net library allows for annotating classes with attributes to
 
 ## Usage
 
+### Installation
+
+This project uses [JitPack](https://jitpack.io/) to distribute the library. To add it to your project, follow the instructions below.
+
+<details>
+<summary>Add to Maven project</summary>
+
+Add the JitPack repository to your `pom.xml` file:
+```xml
+<repositories>
+    <repository>
+        <id>JitPack</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+Then add the dependency:
+```xml
+<dependency>
+    <groupId>com.github.LagrangeDev</groupId>
+    <artifactId>proto-anno</artifactId>
+    <version>0.1.1</version>
+</dependency>
+```
+</details>
+
+<details>
+<summary>Add to Gradle project</summary>
+
+Add the JitPack repository and dependency to your `build.gradle` file:
+```groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.LagrangeDev:proto-anno:0.1.1'
+}
+```
+
+For `build.gradle.kts`:
+```kotlin
+repositories {
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation("com.github.LagrangeDev:proto-anno:0.1.1")
+}
+```
+</details>
+
+See the [JitPack documentation](https://docs.jitpack.io/) for more.
+
 ### Defining a Message
 
 First define a class that extends `ProtoMessage`. Then annotate fields with `@ProtoField`.
