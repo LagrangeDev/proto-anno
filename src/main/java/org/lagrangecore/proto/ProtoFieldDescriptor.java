@@ -11,7 +11,6 @@ import it.unimi.dsi.fastutil.longs.LongList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lagrangecore.proto.annotations.DisablePacking;
-import org.lagrangecore.proto.annotations.FieldType;
 import org.lagrangecore.proto.annotations.ProtoField;
 import org.lagrangecore.proto.annotations.TypeMappedTo;
 
@@ -35,7 +34,7 @@ public record ProtoFieldDescriptor(
         if (field.getType() == IntList.class) {
             return new ProtoFieldDescriptor(
                     protoField.value(),
-                    typeMappedTo == null ? WireFormat.FieldType.INT32 : convertToWireFormat(typeMappedTo.value()),
+                    typeMappedTo == null ? WireFormat.FieldType.INT32 : typeMappedTo.value().toPbFieldType(),
                     false, true,
                     !field.isAnnotationPresent(DisablePacking.class),
                     field, int.class
@@ -45,7 +44,7 @@ public record ProtoFieldDescriptor(
         if (field.getType() == LongList.class) {
             return new ProtoFieldDescriptor(
                     protoField.value(),
-                    typeMappedTo == null ? WireFormat.FieldType.INT64 : convertToWireFormat(typeMappedTo.value()),
+                    typeMappedTo == null ? WireFormat.FieldType.INT64 : typeMappedTo.value().toPbFieldType(),
                     false, true,
                     !field.isAnnotationPresent(DisablePacking.class),
                     field, long.class
@@ -55,7 +54,7 @@ public record ProtoFieldDescriptor(
         if (field.getType() == FloatList.class) {
             return new ProtoFieldDescriptor(
                     protoField.value(),
-                    typeMappedTo == null ? WireFormat.FieldType.FLOAT : convertToWireFormat(typeMappedTo.value()),
+                    typeMappedTo == null ? WireFormat.FieldType.FLOAT : typeMappedTo.value().toPbFieldType(),
                     false, true,
                     !field.isAnnotationPresent(DisablePacking.class),
                     field, float.class
@@ -65,7 +64,7 @@ public record ProtoFieldDescriptor(
         if (field.getType() == DoubleList.class) {
             return new ProtoFieldDescriptor(
                     protoField.value(),
-                    typeMappedTo == null ? WireFormat.FieldType.DOUBLE : convertToWireFormat(typeMappedTo.value()),
+                    typeMappedTo == null ? WireFormat.FieldType.DOUBLE : typeMappedTo.value().toPbFieldType(),
                     false, true,
                     !field.isAnnotationPresent(DisablePacking.class),
                     field, double.class
@@ -75,7 +74,7 @@ public record ProtoFieldDescriptor(
         if (field.getType() == BooleanList.class) {
             return new ProtoFieldDescriptor(
                     protoField.value(),
-                    typeMappedTo == null ? WireFormat.FieldType.BOOL : convertToWireFormat(typeMappedTo.value()),
+                    typeMappedTo == null ? WireFormat.FieldType.BOOL : typeMappedTo.value().toPbFieldType(),
                     false, true,
                     !field.isAnnotationPresent(DisablePacking.class),
                     field, boolean.class
@@ -91,7 +90,7 @@ public record ProtoFieldDescriptor(
                     throw new IllegalArgumentException("Please use fastutil types instead.");
                 }
                 var fieldType = typeMappedTo == null
-                        ? inferFieldType(actualType) : convertToWireFormat(typeMappedTo.value());
+                        ? inferFieldType(actualType) : typeMappedTo.value().toPbFieldType();
                 return new ProtoFieldDescriptor(
                         protoField.value(), fieldType,
                         false, true, false,
@@ -106,7 +105,7 @@ public record ProtoFieldDescriptor(
                 field.getAnnotation(ProtoField.class).value(),
                 typeMappedTo == null
                         ? inferFieldType(field.getType())
-                        : convertToWireFormat(typeMappedTo.value()),
+                        : typeMappedTo.value().toPbFieldType(),
                 field.isAnnotationPresent(Nullable.class), false, false,
                 field, field.getType()
         );
@@ -134,27 +133,6 @@ public record ProtoFieldDescriptor(
         } else {
             throw new IllegalArgumentException("Unsupported scalar field type");
         }
-    }
-
-    static WireFormat.FieldType convertToWireFormat(FieldType fieldType) {
-        return switch (fieldType) {
-            case INT32 -> WireFormat.FieldType.INT32;
-            case INT64 -> WireFormat.FieldType.INT64;
-            case UINT32 -> WireFormat.FieldType.UINT32;
-            case UINT64 -> WireFormat.FieldType.UINT64;
-            case SINT32 -> WireFormat.FieldType.SINT32;
-            case SINT64 -> WireFormat.FieldType.SINT64;
-            case FIXED32 -> WireFormat.FieldType.FIXED32;
-            case FIXED64 -> WireFormat.FieldType.FIXED64;
-            case SFIXED32 -> WireFormat.FieldType.SFIXED32;
-            case SFIXED64 -> WireFormat.FieldType.SFIXED64;
-            case FLOAT -> WireFormat.FieldType.FLOAT;
-            case DOUBLE -> WireFormat.FieldType.DOUBLE;
-            case BOOL -> WireFormat.FieldType.BOOL;
-            case STRING -> WireFormat.FieldType.STRING;
-            case BYTES -> WireFormat.FieldType.BYTES;
-            case MESSAGE -> WireFormat.FieldType.MESSAGE;
-        };
     }
 
     void computeSerializedSize(ProtoMessage message) throws IllegalAccessException {
