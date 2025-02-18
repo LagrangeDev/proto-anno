@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
 import org.lagrangecore.proto.annotations.ProtoField;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,13 +70,12 @@ public final class ProtobufSerializer<T extends ProtoMessage> {
      */
     public byte[] serialize(T message) {
         try {
-            var byteBuffer = ByteBuffer.allocate(computeSize(message));
-            var stream = CodedOutputStream.newInstance(byteBuffer);
+            var buffer = new byte[computeSize(message)];
+            var stream = CodedOutputStream.newInstance(buffer);
             for (var fieldSerializer : fieldSerializers) {
                 fieldSerializer.serialize(message, stream);
             }
-            stream.flush();
-            return byteBuffer.array();
+            return buffer;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

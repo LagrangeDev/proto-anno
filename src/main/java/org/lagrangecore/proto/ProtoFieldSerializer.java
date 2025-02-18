@@ -1,6 +1,5 @@
 package org.lagrangecore.proto;
 
-import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.WireFormat;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
@@ -496,7 +495,7 @@ public interface ProtoFieldSerializer {
                     return;
                 }
                 for (var value : list) {
-                    out.writeBytes(desc.fieldNumber(), ByteString.copyFrom(value));
+                    out.writeByteArray(desc.fieldNumber(), value);
                 }
             };
         } else {
@@ -505,7 +504,7 @@ public interface ProtoFieldSerializer {
                 if (value == null) {
                     return;
                 }
-                out.writeBytes(desc.fieldNumber(), ByteString.copyFrom(value));
+                out.writeByteArray(desc.fieldNumber(), value);
             };
         }
     }
