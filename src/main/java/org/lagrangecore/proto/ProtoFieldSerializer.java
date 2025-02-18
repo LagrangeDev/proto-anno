@@ -479,7 +479,7 @@ public interface ProtoFieldSerializer {
         } else {
             return (msg, out) -> {
                 var value = (String) desc.declaredField().get(msg);
-                if (value == null) {
+                if (value == null || value.isEmpty()) {
                     return;
                 }
                 out.writeString(desc.fieldNumber(), value);
@@ -501,7 +501,7 @@ public interface ProtoFieldSerializer {
         } else {
             return (msg, out) -> {
                 var value = (byte[]) desc.declaredField().get(msg);
-                if (value == null) {
+                if (value == null || value.length == 0) {
                     return;
                 }
                 out.writeByteArray(desc.fieldNumber(), value);

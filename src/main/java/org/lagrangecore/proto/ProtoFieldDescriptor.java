@@ -151,7 +151,8 @@ public record ProtoFieldDescriptor(
                 message.serializedSize += tagSize * list.size() + calculateRepeatedSerializedSize(list);
             }
         } else {
-            message.serializedSize += calculateSingleSerializedSize(message) + tagSize;
+            var valueSize = calculateSingleSerializedSize(message);
+            message.serializedSize += valueSize == -1 ? 0 : tagSize + valueSize;
         }
     }
 
@@ -206,12 +207,24 @@ public record ProtoFieldDescriptor(
             case FLOAT -> CodedOutputStream.computeFloatSizeNoTag(declaredField.getFloat(msg));
             case DOUBLE -> CodedOutputStream.computeDoubleSizeNoTag(declaredField.getDouble(msg));
             case BOOL -> CodedOutputStream.computeBoolSizeNoTag(declaredField.getBoolean(msg));
-            case STRING -> CodedOutputStream.computeStringSizeNoTag((String) declaredField.get(msg));
-            case BYTES -> CodedOutputStream.computeByteArraySizeNoTag((byte[]) declaredField.get(msg));
+            case STRING -> {
+                @Nullable var string = (String) declaredField.get(msg);
+                if (string == null || string.isEmpty()) {
+                    yield -1; // Should not serialize this field
+                }
+                yield CodedOutputStream.computeStringSizeNoTag(string);
+            }
+            case BYTES -> {
+                byte @Nullable [] bytes = (byte[]) declaredField.get(msg);
+                if (bytes == null || bytes.length == 0) {
+                    yield -1; // Should not serialize this field
+                }
+                yield CodedOutputStream.computeByteArraySizeNoTag(bytes);
+            }
             case MESSAGE -> {
                 @Nullable var message = (ProtoMessage) declaredField.get(msg);
                 if (message == null) {
-                    yield 0;
+                    yield -1; // Should not serialize this field
                 }
                 int bodySize = ProtobufSerializer.of((Class<ProtoMessage>) actualType).computeSize(message);
                 int lengthSize = CodedOutputStream.computeUInt32SizeNoTag(bodySize);
