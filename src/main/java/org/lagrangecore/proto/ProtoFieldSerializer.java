@@ -42,6 +42,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -51,6 +54,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeInt32(desc.fieldNumber(), value);
                     }
@@ -69,6 +75,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -78,6 +87,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeInt64(desc.fieldNumber(), value);
                     }
@@ -96,6 +108,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -105,6 +120,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeUInt32(desc.fieldNumber(), value);
                     }
@@ -123,6 +141,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -132,6 +153,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeUInt64(desc.fieldNumber(), value);
                     }
@@ -150,6 +174,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -159,6 +186,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeSInt32(desc.fieldNumber(), value);
                     }
@@ -177,6 +207,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -186,6 +219,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeSInt64(desc.fieldNumber(), value);
                     }
@@ -204,6 +240,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -213,6 +252,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeFixed32(desc.fieldNumber(), value);
                     }
@@ -231,6 +273,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -240,6 +285,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeFixed64(desc.fieldNumber(), value);
                     }
@@ -258,6 +306,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -267,6 +318,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeSFixed32(desc.fieldNumber(), value);
                     }
@@ -285,6 +339,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -294,6 +351,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeSFixed64(desc.fieldNumber(), value);
                     }
@@ -312,6 +372,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (FloatList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -321,6 +384,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (FloatList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeFloat(desc.fieldNumber(), value);
                     }
@@ -339,6 +405,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (DoubleList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -348,6 +417,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (DoubleList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeDouble(desc.fieldNumber(), value);
                     }
@@ -366,6 +438,9 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (BooleanList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(msg.lengthDelimitedFieldSizes.get(desc.fieldNumber()));
                     for (var value : list) {
@@ -375,6 +450,9 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (BooleanList) desc.declaredField().get(msg);
+                    if (list == null) {
+                        return;
+                    }
                     for (var value : list) {
                         out.writeBool(desc.fieldNumber(), value);
                     }
@@ -392,6 +470,9 @@ public interface ProtoFieldSerializer {
         if (desc.isRepeated()) {
             return (msg, out) -> {
                 var list = (List<String>) desc.declaredField().get(msg);
+                if (list == null) {
+                    return;
+                }
                 for (var value : list) {
                     out.writeString(desc.fieldNumber(), value);
                 }
@@ -399,6 +480,9 @@ public interface ProtoFieldSerializer {
         } else {
             return (msg, out) -> {
                 var value = (String) desc.declaredField().get(msg);
+                if (value == null) {
+                    return;
+                }
                 out.writeString(desc.fieldNumber(), value);
             };
         }
@@ -408,6 +492,9 @@ public interface ProtoFieldSerializer {
         if (desc.isRepeated()) {
             return (msg, out) -> {
                 var list = (List<byte[]>) desc.declaredField().get(msg);
+                if (list == null) {
+                    return;
+                }
                 for (var value : list) {
                     out.writeBytes(desc.fieldNumber(), ByteString.copyFrom(value));
                 }
@@ -415,6 +502,9 @@ public interface ProtoFieldSerializer {
         } else {
             return (msg, out) -> {
                 var value = (byte[]) desc.declaredField().get(msg);
+                if (value == null) {
+                    return;
+                }
                 out.writeBytes(desc.fieldNumber(), ByteString.copyFrom(value));
             };
         }
@@ -425,6 +515,9 @@ public interface ProtoFieldSerializer {
         if (desc.isRepeated()) {
             return (msg, out) -> {
                 var list = (List<ProtoMessage>) desc.declaredField().get(msg);
+                if (list == null) {
+                    return;
+                }
                 for (var value : list) {
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                     out.writeUInt32NoTag(value.serializedSize);
@@ -434,6 +527,9 @@ public interface ProtoFieldSerializer {
         } else {
             return (msg, out) -> {
                 var value = (ProtoMessage) desc.declaredField().get(msg);
+                if (value == null) {
+                    return;
+                }
                 out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
                 out.writeUInt32NoTag(value.serializedSize);
                 serializer.serialize(value, out);
