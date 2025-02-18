@@ -30,7 +30,7 @@ Then add the dependency:
 <dependency>
     <groupId>com.github.LagrangeDev</groupId>
     <artifactId>proto-anno</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
 </dependency>
 ```
 </details>
@@ -45,7 +45,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.LagrangeDev:proto-anno:0.2.0'
+    implementation 'com.github.LagrangeDev:proto-anno:0.2.1'
 }
 ```
 
@@ -56,7 +56,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.LagrangeDev:proto-anno:0.2.0")
+    implementation("com.github.LagrangeDev:proto-anno:0.2.1")
 }
 ```
 </details>
