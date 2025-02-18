@@ -2,6 +2,7 @@ package org.lagrangecore.proto;
 
 import com.google.protobuf.CodedOutputStream;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
+import org.jetbrains.annotations.NotNull;
 import org.lagrangecore.proto.annotations.ProtoField;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ public final class ProtobufSerializer<T extends ProtoMessage> {
         return (ProtobufSerializer<T>) serializers.get(clazz);
     }
 
-    int computeSize(T message) throws IllegalAccessException {
+    int computeSize(@NotNull T message) throws IllegalAccessException {
         if (message.serializedSize > 0) {
             return message.serializedSize;
         }
@@ -81,7 +82,7 @@ public final class ProtobufSerializer<T extends ProtoMessage> {
         }
     }
 
-    void serialize(T message, CodedOutputStream stream) throws IOException, IllegalAccessException {
+    void serialize(@NotNull T message, CodedOutputStream stream) throws IOException, IllegalAccessException {
         for (var fieldSerializer : fieldSerializers) {
             fieldSerializer.serialize(message, stream);
         }

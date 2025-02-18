@@ -41,7 +41,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -53,7 +53,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -74,7 +74,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -86,7 +86,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -107,7 +107,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -119,7 +119,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -140,7 +140,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -152,7 +152,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -173,7 +173,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -185,7 +185,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -206,7 +206,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -218,7 +218,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -239,7 +239,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -251,7 +251,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -272,7 +272,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -284,7 +284,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -305,7 +305,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -317,7 +317,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (IntList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -338,7 +338,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -350,7 +350,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (LongList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -371,7 +371,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (FloatList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -383,7 +383,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (FloatList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -404,7 +404,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (DoubleList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -416,7 +416,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (DoubleList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -437,7 +437,7 @@ public interface ProtoFieldSerializer {
             if (desc.isPacked()) {
                 return (msg, out) -> {
                     var list = (BooleanList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     out.writeTag(desc.fieldNumber(), WireFormat.WIRETYPE_LENGTH_DELIMITED);
@@ -449,7 +449,7 @@ public interface ProtoFieldSerializer {
             } else {
                 return (msg, out) -> {
                     var list = (BooleanList) desc.declaredField().get(msg);
-                    if (list == null) {
+                    if (list == null || list.isEmpty()) {
                         return;
                     }
                     for (var value : list) {
@@ -469,7 +469,7 @@ public interface ProtoFieldSerializer {
         if (desc.isRepeated()) {
             return (msg, out) -> {
                 var list = (List<String>) desc.declaredField().get(msg);
-                if (list == null) {
+                if (list == null || list.isEmpty()) {
                     return;
                 }
                 for (var value : list) {
@@ -491,7 +491,7 @@ public interface ProtoFieldSerializer {
         if (desc.isRepeated()) {
             return (msg, out) -> {
                 var list = (List<byte[]>) desc.declaredField().get(msg);
-                if (list == null) {
+                if (list == null || list.isEmpty()) {
                     return;
                 }
                 for (var value : list) {
@@ -514,7 +514,7 @@ public interface ProtoFieldSerializer {
         if (desc.isRepeated()) {
             return (msg, out) -> {
                 var list = (List<ProtoMessage>) desc.declaredField().get(msg);
-                if (list == null) {
+                if (list == null || list.isEmpty()) {
                     return;
                 }
                 for (var value : list) {

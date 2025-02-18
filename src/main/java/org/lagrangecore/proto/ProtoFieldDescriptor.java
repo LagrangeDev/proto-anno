@@ -124,7 +124,7 @@ public record ProtoFieldDescriptor(
             return WireFormat.FieldType.BOOL;
         } else if (type == String.class) {
             return WireFormat.FieldType.STRING;
-        } else if (type == ByteString.class) {
+        } else if (type == byte[].class) {
             return WireFormat.FieldType.BYTES;
         } else if (type instanceof Class<?> clazz
                 && ProtoMessage.class.isAssignableFrom(clazz)
@@ -138,7 +138,10 @@ public record ProtoFieldDescriptor(
     void computeSerializedSize(ProtoMessage message) throws IllegalAccessException {
         int tagSize = CodedOutputStream.computeTagSize(fieldNumber);
         if (isRepeated) {
-            var list = (List<?>) declaredField.get(message);
+            @Nullable var list = (List<?>) declaredField.get(message);
+            if (list == null || list.isEmpty()) {
+                return;
+            }
             if (isPacked) {
                 int repeatedSize = calculateRepeatedSerializedSize(list);
                 int packedLengthSize = CodedOutputStream.computeUInt32SizeNoTag(repeatedSize);
@@ -153,7 +156,7 @@ public record ProtoFieldDescriptor(
     }
 
     @SuppressWarnings("unchecked")
-    private int calculateRepeatedSerializedSize(List<?> list) {
+    private int calculateRepeatedSerializedSize(@NotNull List<?> list) {
         return switch (fieldType) {
             case INT32 -> ((IntList) list).intStream().map(CodedOutputStream::computeInt32SizeNoTag).sum();
             case INT64 -> ((LongList) list).longStream().mapToInt(CodedOutputStream::computeInt64SizeNoTag).sum();
@@ -206,8 +209,11 @@ public record ProtoFieldDescriptor(
             case STRING -> CodedOutputStream.computeStringSizeNoTag((String) declaredField.get(msg));
             case BYTES -> CodedOutputStream.computeByteArraySizeNoTag((byte[]) declaredField.get(msg));
             case MESSAGE -> {
-                int bodySize = ProtobufSerializer.of((Class<ProtoMessage>) actualType)
-                        .computeSize((ProtoMessage) declaredField.get(msg));
+                @Nullable var message = (ProtoMessage) declaredField.get(msg);
+                if (message == null) {
+                    yield 0;
+                }
+                int bodySize = ProtobufSerializer.of((Class<ProtoMessage>) actualType).computeSize(message);
                 int lengthSize = CodedOutputStream.computeUInt32SizeNoTag(bodySize);
                 yield lengthSize + bodySize;
             }
