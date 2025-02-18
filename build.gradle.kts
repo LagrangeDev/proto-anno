@@ -1,10 +1,10 @@
 plugins {
-    id("java")
+    id("java-library")
     id("maven-publish")
 }
 
 group = "org.lagrangecore"
-version = "0.1.1"
+version = "0.2.0"
 
 java {
     toolchain {
@@ -18,8 +18,9 @@ repositories {
 
 dependencies {
     implementation("com.google.protobuf:protobuf-java:4.29.3")
-    implementation("org.jetbrains:annotations:24.0.0")
-    implementation("it.unimi.dsi:fastutil:8.5.15")
+    api("it.unimi.dsi:fastutil:8.5.15")
+    api("org.jetbrains:annotations:24.0.0")
+
     testCompileOnly("org.projectlombok:lombok:1.18.36")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
 }
