@@ -243,6 +243,12 @@ long bigNumber = Integer.toUnsignedLong(test.bigNumber);
 String evenBiggerNumber = Long.toUnsignedString(test.evenBiggerNumber);
 ```
 
+### Use with Lombok
+
+[Project Lombok](https://projectlombok.org/) is a library that helps reduce boilerplate code in Java. You can use it with proto-anno to further simplify your code.
+
+The example in the [test folder](/src/test/java/org/lagrangecore/proto/test/GeneralTestMessage.java) uses the Lombok annotation `@Builder`. When you are using `@Builder`, you should also use the annotation `@NoArgsConstructor` to generate a no-argument constructor. And to avoid compilation errors, you should also add an `@AllArgsConstructor` to generate a constructor with all the fields, which is used by Lombok to generate the `build()` method. So in total you need at least three annotations: `@Builder`, `@NoArgsConstructor` and `@AllArgsConstructor`.
+
 ## Limitations
 
 The following features are not supported:

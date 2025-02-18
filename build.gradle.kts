@@ -20,6 +20,8 @@ dependencies {
     implementation("com.google.protobuf:protobuf-java:4.29.3")
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("it.unimi.dsi:fastutil:8.5.15")
+    testCompileOnly("org.projectlombok:lombok:1.18.36")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
 }
 
 tasks.test {
